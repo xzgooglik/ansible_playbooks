@@ -1,0 +1,38 @@
+---
+- name: Install and upload web page #name of playbook
+  hosts: all                        # where
+  become: yes
+
+  vars:
+    source_file: ../data/www/
+    destin_file: /var/www/html
+    
+  tasks:
+  - name: Print Linux Version
+    debug: var=ansible_os_family
+
+  - block:  #====== for setup in REDHAT =======================================
+      - name: Install Apache on Centos
+        yum: name=httpd state=latest
+
+      - name: Copy file to remoute servers
+        copy: src={{ source_file }} dest={{ destin_file }} mode=0555
+        notify: Restart Apache RedHat
+
+      - name: Starts web service and enable on boot
+        service: name=httpd state=started enabled=yes
+    when: ansible_os_family == "RedHat"
+  
+
+  - block:  #===== for setup in DEBIAN ============================================
+      - name: Install Apache on Debian
+        apt: name=apache2 state=latest
+    
+      - name: Start web service for Debian
+        service: name=apache2 state=started enabled=yes
+    when: ansible_os_family == "Debian"
+
+
+  handlers:
+  - name: Restart Apache RedHat
+    service: name=httpd state=restarted

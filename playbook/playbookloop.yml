@@ -1,0 +1,31 @@
+---
+- name: Loops Playbook
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Say Hello to all
+    debug: msg="Hello {{ item }}"
+    loop:
+        - "Vasya"
+        - "Masha"
+        - "Petiya"
+
+  - name: Loop until example
+    shell: echo -n Z >> myfile.txt && cat myfile.txt
+    register: output
+    delay: 2 # second
+    retries: 10  #count
+    until: output.stdout.find("Z") == false  # to
+  
+  - name: Print
+    debug:
+      var: output.stdout
+
+  - name: Install many packeged
+    yum: name={{ item }} state=removed
+    loop:
+      - iftop
+      - tree
+      - htop
+      - mysql

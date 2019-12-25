@@ -1,0 +1,5 @@
+[webserver]
+centos-1 	ansible_host=178.33.243.227
+centos-2	ansible_host=178.33.243.235
+
+

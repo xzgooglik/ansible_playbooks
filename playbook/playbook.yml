@@ -1,0 +1,26 @@
+
+---
+- name: My Playbook for Variables 
+  hosts: all
+  become: yes
+
+  vars:
+    msg1  : Hello
+    msg2  : World
+    secret: 23E23E0OF40FKKVF0043
+
+  tasks:
+  - debug:
+      var: secret
+  - debug:
+      msg: "Test concatenaion from variables {{msg1}} {{msg2}}" 
+
+  - set_fact: full_msg="{{ msg1 }} {{ msg2 }}"
+
+  - debug:
+      var: full_msg
+
+  - shell: uptime
+    register: results
+  - debug:
+      var: results      
