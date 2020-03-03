@@ -1,4 +1,3 @@
-
 ---
 - name: Test Connections to my servers
   hosts: all
